@@ -1,0 +1,14 @@
+{
+  "name": "wisecow-app",
+  "version": "1.0.0",
+  "description": "Wisecow application",
+  "main": "index.js",
+  "scripts": {
+  "start": "node app.js"
+ },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+
+}
+

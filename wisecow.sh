@@ -41,6 +41,8 @@ main() {
 		cat $RSPFILE | nc -lN $SRVPORT | handleRequest
 		sleep 0.01
 	done
+
+	
 }
 
 main
