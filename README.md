@@ -1,28 +1,64 @@
-# Cow wisdom web server
+1.Clone the repository:
 
-## Prerequisites
+git clone https://github.com/nyrahul/wisecow
 
-```
-sudo apt install fortune-mod cowsay -y
-```
+2. write a dockerfile(dockerfile):
 
-## How to use?
+FROM node:14
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "start"]
 
-1. Run `./wisecow.sh`
-2. Point the browser to server port (default 4499)
+3.Build the Docker image:
 
-## What to expect?
-![wisecow](https://github.com/nyrahul/wisecow/assets/9133227/8d6bfde3-4a5a-480e-8d55-3fef60300d98)
+docker build -t wisecow-app .
 
-# Problem Statement
-Deploy the wisecow application as a k8s app
+4.Test the Docker image locally: 
 
-## Requirement
-1. Create Dockerfile for the image and corresponding k8s manifest to deploy in k8s env. The wisecow service should be exposed as k8s service.
-2. Github action for creating new image when changes are made to this repo
-3. [Challenge goal]: Enable secure TLS communication for the wisecow app.
+docker run -p 3000:3000 wisecow-app 
 
-## Expected Artifacts
-1. Github repo containing the app with corresponding dockerfile, k8s manifest, any other artifacts needed.
-2. Github repo with corresponding github action.
-3. Github repo should be kept private and the access should be enabled for following github IDs: nyrahul, SujithKasireddy
+Kubernetes Deployment
+
+1.Create Deployment(deployment.yaml):
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wisecow-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wisecow
+  template:
+    metadata:
+      labels:
+        app: wisecow
+    spec:
+      containers:
+        - name: wisecow-container
+          image: wisecow-app:latest
+          ports:
+            - containerPort: 5000
+
+2.Create Service YAML(service.yaml):
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wisecow-service
+spec:
+  selector:
+    app: wisecow
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
+
+3.Apply the manifest files:
+
+kubectl apply -f deployment.yaml
+
+kubectl apply -f service.yaml    
