@@ -7,10 +7,10 @@
 2. **Write Dockerfile**:
     ```Dockerfile
 FROM node:14
-#WORKDIR /app
-#COPY . .
-#RUN npm install
-#CMD ["npm", "start"]
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "start"]
 
 3. **Build the Docker image**:
     ```bash
